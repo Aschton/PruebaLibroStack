@@ -13,16 +13,35 @@ Sistema de gestión de librería con arquitectura de microservicios usando Sprin
 Gestiona el catálogo de libros.
 - **Atributos:** id, titulo, autor, stock, estado (Nuevo/Usado)
 - **Endpoints:** GET, POST, PUT, DELETE `/api/libros`
+- **Funcionalidades:**
+  - CRUD completo de libros
+  - Validación de campos obligatorios con Bean Validation (@NotBlank, @Min)
+  - El stock no puede ser negativo
+  - El estado solo acepta los valores NUEVO o USADO
+  - Manejo de errores con respuestas HTTP estructuradas
 
 ### 2. Microservicio Usuarios
 Se encarga de gestionar los usuarios registrados en el sistema.
 - **Atributos:** id, nombre, rut, correo
 - **Endpoints:** GET, POST, PUT, DELETE `/api/usuarios`
+- **Funcionalidades:**
+  - CRUD completo de usuarios
+  - Validación de formato de correo electrónico
+  - Validación de formato de RUT chileno
+  - El RUT y correo deben ser únicos en el sistema
+  - Manejo de errores con respuestas HTTP estructuradas
+
 
 ### 3. Microservicio Préstamos
 Se encarga de gestionar los préstamos de libros. Aparte, se comunica con los otros microservicios mediante Feign Client.
 - **Atributos:** id, libroId, usuarioId, fechaPrestamo, estadoPrestamo (ACTIVO/DEVUELTO)
 - **Endpoints:** GET, POST, PUT, DELETE `/api/prestamos`
+- **Funcionalidades:**
+  - CRUD completo de préstamos
+  - Verifica que el libro exista consultando microservicio-libros via Feign Client
+  - Verifica que el usuario exista consultando microservicio-usuarios via Feign Client
+  - La fecha del préstamo se asigna automáticamente al momento de crearlo
+  - Logs estructurados con SLF4J en todas las capas
 
 ## Pasos para Ejecutar
 
@@ -53,7 +72,7 @@ POST http://localhost:8081/api/libros
   "titulo": "El Quijote",
   "autor": "Cervantes",
   "stock": 5,
-  "estado": "nuevo"
+  "estado": "NUEVO"
 }
 ```
 
